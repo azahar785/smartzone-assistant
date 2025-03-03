@@ -84,7 +84,7 @@
   }
 
   html, body {
-    @apply h-full overflow-hidden;
+    @apply h-full;
   }
 
   body {
@@ -153,7 +153,28 @@
   }
   
   .button-gradient {
-    @apply bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 transition-all;
+    @apply bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 transition-all text-white;
+  }
+
+  /* Landing page specific components */
+  .feature-card {
+    @apply bg-card rounded-xl p-6 shadow-sm border hover:shadow-md transition-all;
+  }
+  
+  .feature-icon {
+    @apply h-12 w-12 rounded-lg flex items-center justify-center mb-5;
+  }
+  
+  .section-container {
+    @apply container py-16 md:py-24;
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold mb-6;
+  }
+  
+  .section-description {
+    @apply text-lg text-muted-foreground max-w-[600px] mb-10;
   }
 }
 
@@ -165,4 +186,13 @@
   .text-pretty {
     text-wrap: pretty;
   }
+  
+  .landing-page {
+    @apply overflow-y-auto overflow-x-hidden;
+  }
+  
+  .landing-page #root {
+    @apply overflow-visible;
+  }
 }
+

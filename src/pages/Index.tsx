@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { createNewChat } from '@/utils/chatStorage';
 import ChatInterface from '@/components/ChatInterface';
 import ChatHistory from '@/components/ChatHistory';
-import { MenuIcon, X, Sparkles } from 'lucide-react';
+import { MenuIcon, X, Sparkles, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -48,11 +48,20 @@ const Index = () => {
         >
           <MenuIcon className="h-5 w-5" />
         </Button>
-        <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto">
+        <div className="flex items-center justify-between w-full">
           <h1 className="font-bold text-xl flex items-center">
             <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">SmartZone AI</span>
             <Sparkles className="h-4 w-4 ml-1 text-amber-500" />
           </h1>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
+            onClick={() => navigate('/')}
+          >
+            <Home className="h-4 w-4" />
+            <span className="hidden sm:inline">Home</span>
+          </Button>
         </div>
       </header>
       
