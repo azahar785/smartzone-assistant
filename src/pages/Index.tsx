@@ -1,11 +1,97 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { createNewChat } from '@/utils/chatStorage';
+import ChatInterface from '@/components/ChatInterface';
+import ChatHistory from '@/components/ChatHistory';
+import { Separator } from '@/components/ui/separator';
+import { MenuIcon, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useToast } from '@/components/ui/use-toast';
 
 const Index = () => {
+  const { chatId } = useParams<{ chatId?: string }>();
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const [sidebarOpen, setSidebarOpen] = React.useState(!isMobile);
+  const { toast } = useToast();
+  
+  useEffect(() => {
+    // If no chatId, redirect to a new chat
+    if (!chatId) {
+      const newChatId = createNewChat();
+      navigate(`/chat/${newChatId}`, { replace: true });
+      
+      toast({
+        description: "Welcome to SmartZone AI",
+      });
+    }
+  }, [chatId, navigate, toast]);
+  
+  useEffect(() => {
+    // Toggle sidebar based on screen size
+    if (isMobile !== undefined) {
+      setSidebarOpen(!isMobile); 
+    }
+  }, [isMobile]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="h-full flex flex-col">
+      <header className="flex items-center h-16 px-6 border-b bg-background/80 backdrop-blur-sm">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="lg:hidden"
+        >
+          <MenuIcon className="h-5 w-5" />
+        </Button>
+        <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto">
+          <h1 className="font-bold text-xl">SmartZone AI</h1>
+        </div>
+      </header>
+      
+      <div className="flex flex-1 overflow-hidden">
+        {/* Mobile sidebar overlay */}
+        {sidebarOpen && isMobile && (
+          <div 
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+        
+        {/* Sidebar */}
+        <aside 
+          className={cn(
+            "fixed inset-y-0 left-0 z-50 flex w-80 flex-col border-r bg-card transition-transform duration-300 lg:z-0 lg:translate-x-0 pt-16",
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          )}
+        >
+          {isMobile && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-4 top-4"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          )}
+          <ChatHistory currentChatId={chatId} />
+        </aside>
+        
+        {/* Main content */}
+        <main 
+          className={cn(
+            "flex-1 overflow-hidden transition-all duration-300 ease-in-out",
+            sidebarOpen ? "lg:ml-80" : "ml-0"
+          )}
+        >
+          <ChatInterface />
+        </main>
       </div>
     </div>
   );
