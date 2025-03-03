@@ -2,7 +2,7 @@
 import { toast } from "@/components/ui/use-toast";
 
 const API_KEY = 'AIzaSyB8LWO-zxxKStEqDBQXNGRB3j2nWug7SDo';
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
