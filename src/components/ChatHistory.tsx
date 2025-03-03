@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAllChats, createNewChat, deleteChat } from '@/utils/chatStorage';
 import { cn } from '@/lib/utils';
-import { MessageSquare, Plus, Trash2 } from 'lucide-react';
+import { MessageSquare, Plus, Trash2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 
@@ -72,7 +72,7 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ currentChatId }) => {
       <div className="p-4 border-b">
         <Button 
           onClick={handleNewChat} 
-          className="w-full flex items-center space-x-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+          className="w-full flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:from-purple-600 hover:to-indigo-700 transition-all shadow-md"
         >
           <Plus className="h-4 w-4" />
           <span>New Chat</span>
@@ -93,8 +93,8 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ currentChatId }) => {
                 to={`/chat/${chat.id}`} 
                 key={chat.id} 
                 className={cn(
-                  'flex items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-accent group',
-                  currentChatId === chat.id && 'bg-accent',
+                  'flex items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-accent/80 group transition-all',
+                  currentChatId === chat.id ? 'bg-accent/80 shadow-sm' : '',
                 )}
               >
                 <div className="flex items-center space-x-3 flex-1 min-w-0">
@@ -115,10 +115,14 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ currentChatId }) => {
         )}
       </div>
       
-      <div className="p-4 border-t mt-auto">
-        <div className="text-xs text-center text-muted-foreground">
-          <p>SmartZone AI Assistant</p>
-          <p className="mt-1">Powered by Google Gemini</p>
+      <div className="p-4 border-t mt-auto bg-card/50 backdrop-blur-sm">
+        <div className="text-xs text-center">
+          <p className="font-medium">SmartZone AI Assistant</p>
+          <div className="mt-1 flex items-center justify-center text-muted-foreground">
+            <span>Powered by</span>
+            <span className="ml-1 font-semibold bg-gradient-to-r from-purple-600 to-indigo-500 bg-clip-text text-transparent">Creazone IT</span>
+            <Sparkles className="h-3 w-3 ml-1 text-amber-500" />
+          </div>
         </div>
       </div>
     </div>

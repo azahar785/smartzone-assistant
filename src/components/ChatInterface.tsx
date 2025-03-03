@@ -6,7 +6,7 @@ import { saveChat, loadChat, updateChatTitle } from '@/utils/chatStorage';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, SendHorizonal, Code, Sparkles } from 'lucide-react';
+import { Loader2, SendHorizonal, Code, Sparkles, Lightbulb, BrainCircuit, FolderGit2 } from 'lucide-react';
 import ChatMessageComponent from './ChatMessage';
 import { toast } from '@/components/ui/use-toast';
 
@@ -124,24 +124,24 @@ const ChatInterface: React.FC = () => {
             <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 animate-pulse-subtle">
               <Sparkles className="h-10 w-10 text-primary" />
             </div>
-            <h1 className="text-3xl font-bold mb-3 tracking-tight">Welcome to SmartZone AI</h1>
+            <h1 className="text-3xl font-bold mb-3 tracking-tight bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Welcome to SmartZone AI</h1>
             <p className="text-lg text-muted-foreground max-w-md mb-8">
-              Your personal AI assistant powered by Google Gemini
+              Your personal AI assistant powered by Creazone IT
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg w-full">
               <Button 
                 variant="outline" 
-                className="flex items-center justify-center gap-2 py-6 text-sm"
+                className="flex items-center justify-center gap-2 py-6 text-sm hover:bg-accent/50 transition-all"
                 onClick={() => setInput("Explain quantum computing in simple terms")}
               >
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Sparkles className="h-4 w-4 text-primary" />
+                  <Lightbulb className="h-4 w-4 text-primary" />
                 </div>
                 <span>Explain a concept</span>
               </Button>
               <Button 
                 variant="outline" 
-                className="flex items-center justify-center gap-2 py-6 text-sm"
+                className="flex items-center justify-center gap-2 py-6 text-sm hover:bg-accent/50 transition-all"
                 onClick={() => {
                   setInput("Generate a simple React component for a user profile card");
                   setIsCodeMode(true);
@@ -151,6 +151,28 @@ const ChatInterface: React.FC = () => {
                   <Code className="h-4 w-4 text-primary" />
                 </div>
                 <span>Generate code</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex items-center justify-center gap-2 py-6 text-sm hover:bg-accent/50 transition-all"
+                onClick={() => setInput("What are the key differences between machine learning and deep learning?")}
+              >
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <BrainCircuit className="h-4 w-4 text-primary" />
+                </div>
+                <span>AI & ML concepts</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex items-center justify-center gap-2 py-6 text-sm hover:bg-accent/50 transition-all"
+                onClick={() => {
+                  setInput("Compare Git merge vs rebase strategies");
+                }}
+              >
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <FolderGit2 className="h-4 w-4 text-primary" />
+                </div>
+                <span>Development tips</span>
               </Button>
             </div>
           </div>
@@ -178,7 +200,7 @@ const ChatInterface: React.FC = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={isCodeMode ? "Describe the code you want to generate..." : "Ask SmartZone AI anything..."}
-              className="min-h-[60px] max-h-[200px] pr-16 resize-none border-2 focus-visible:ring-1 focus-visible:ring-offset-0"
+              className="min-h-[60px] max-h-[200px] pr-16 resize-none border-2 rounded-xl focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 focus:border-primary/50 transition-all"
             />
             <div className="absolute right-2 bottom-2 flex gap-2">
               <Button
@@ -199,7 +221,7 @@ const ChatInterface: React.FC = () => {
                 type="submit"
                 onClick={handleSend}
                 disabled={isLoading || !input.trim()}
-                className="rounded-full h-8 w-8 bg-primary hover:bg-primary/90"
+                className="rounded-full h-8 w-8 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 transition-all shadow-sm"
               >
                 {isLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

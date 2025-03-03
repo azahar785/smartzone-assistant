@@ -5,8 +5,7 @@ import { useEffect } from 'react';
 import { createNewChat } from '@/utils/chatStorage';
 import ChatInterface from '@/components/ChatInterface';
 import ChatHistory from '@/components/ChatHistory';
-import { Separator } from '@/components/ui/separator';
-import { MenuIcon, X } from 'lucide-react';
+import { MenuIcon, X, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -40,7 +39,7 @@ const Index = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <header className="flex items-center h-16 px-6 border-b bg-background/80 backdrop-blur-sm">
+      <header className="flex items-center h-16 px-6 border-b bg-background/80 backdrop-blur-sm z-10">
         <Button
           variant="ghost"
           size="icon"
@@ -50,7 +49,10 @@ const Index = () => {
           <MenuIcon className="h-5 w-5" />
         </Button>
         <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto">
-          <h1 className="font-bold text-xl">SmartZone AI</h1>
+          <h1 className="font-bold text-xl flex items-center">
+            <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">SmartZone AI</span>
+            <Sparkles className="h-4 w-4 ml-1 text-amber-500" />
+          </h1>
         </div>
       </header>
       
@@ -66,7 +68,7 @@ const Index = () => {
         {/* Sidebar */}
         <aside 
           className={cn(
-            "fixed inset-y-0 left-0 z-50 flex w-80 flex-col border-r bg-card transition-transform duration-300 lg:z-0 lg:translate-x-0 pt-16",
+            "fixed inset-y-0 left-0 z-50 flex w-80 flex-col border-r bg-card/95 backdrop-blur-sm transition-transform duration-300 lg:z-0 lg:translate-x-0 pt-16",
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           )}
         >
