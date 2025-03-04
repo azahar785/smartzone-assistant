@@ -1,13 +1,13 @@
-
 import React, { useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowRight, Sparkles, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { useEffect } from 'react';
 import { toast } from '@/components/ui/use-toast';
+import SZLogo from '@/components/SZLogo';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,7 +18,6 @@ const Auth = () => {
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect if already authenticated
   useEffect(() => {
     if (user) {
       navigate('/chat');
@@ -44,7 +43,7 @@ const Auth = () => {
         }
         
         await signUp(email, password, fullName);
-        setIsLogin(true); // Switch to login form after signup
+        setIsLogin(true);
         toast({
           description: "Account created successfully. Please log in.",
         });
@@ -58,7 +57,6 @@ const Auth = () => {
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
-    // Reset form values
     setEmail('');
     setPassword('');
     setFullName('');
@@ -66,34 +64,27 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="w-full border-b bg-background/80 backdrop-blur-sm z-50">
+      <header className="w-full border-b bg-background">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <span 
-              className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent text-xl font-bold flex items-center cursor-pointer" 
-              onClick={() => navigate('/')}
-            >
-              SmartZone AI
-              <Sparkles className="h-4 w-4 ml-1 text-amber-500" />
-            </span>
+            <SZLogo />
           </div>
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate('/')}
-            className="flex items-center gap-1"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Button>
+          <div>
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/')}
+              className="flex items-center gap-1"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Home
+            </Button>
+          </div>
         </div>
       </header>
 
-      {/* Auth Form */}
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 container max-w-[400px] mx-auto flex flex-col justify-center py-12">
         <div className="w-full max-w-md">
           <div className="space-y-4 bg-card p-8 rounded-xl shadow-lg border relative overflow-hidden">
-            {/* Background Effects */}
             <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-purple-400/30 rounded-full blur-[120px]" />
             
             <div className="text-center space-y-2">

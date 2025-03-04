@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ArrowRight, Bot, BrainCircuit, MessageSquare, Sparkles, Zap, Rocket } from 'lucide-react';
+import { ArrowRight, Bot, BrainCircuit, MessageSquare, Zap, Rocket } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import SZLogo from '@/components/SZLogo';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -24,10 +24,7 @@ const Landing = () => {
       <header className="sticky top-0 w-full border-b bg-background/80 backdrop-blur-sm z-50">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent text-xl font-bold flex items-center">
-              SmartZone AI
-              <Sparkles className="h-4 w-4 ml-1 text-amber-500" />
-            </span>
+            <SZLogo />
           </div>
           <div className="flex items-center gap-4">
             {user ? (
@@ -279,10 +276,7 @@ const Landing = () => {
         <div className="container">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-2 mb-4 md:mb-0">
-              <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent text-xl font-bold flex items-center">
-                SmartZone AI
-                <Sparkles className="h-4 w-4 ml-1 text-amber-500" />
-              </span>
+              <SZLogo size="sm" />
             </div>
             <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 text-sm text-muted-foreground">
               <a href="#" className="hover:text-foreground transition-colors">Terms of Service</a>

@@ -1,124 +1,225 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import { createNewChat } from '@/utils/chatStorage';
+import { Button } from '@/components/ui/button';
+import { 
+  PlusCircle, Menu, X, LogOut, 
+  Settings, Trash2, MoreVertical, Loader2
+} from 'lucide-react';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { Separator } from '@/components/ui/separator';
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetTrigger 
+} from '@/components/ui/sheet';
 import ChatInterface from '@/components/ChatInterface';
 import ChatHistory from '@/components/ChatHistory';
-import { MenuIcon, X, Sparkles, Home, LogOut } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/context/AuthContext';
+import { useMobile } from '@/hooks/use-mobile';
+import SZLogo from '@/components/SZLogo';
 
 const Index = () => {
-  const { chatId } = useParams<{ chatId?: string }>();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
+  const [selectedChatId, setSelectedChatId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { chatId } = useParams();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
-  const [sidebarOpen, setSidebarOpen] = React.useState(!isMobile);
-  const { toast } = useToast();
-  const { signOut, user } = useAuth();
-  
+  const { user, signOut } = useAuth();
+  const isMobile = useMobile();
+
   useEffect(() => {
-    // If no chatId, redirect to a new chat
-    if (!chatId) {
-      const newChatId = createNewChat();
-      navigate(`/chat/${newChatId}`, { replace: true });
-      
-      toast({
-        description: "Welcome to SmartZone AI",
-      });
+    if (chatId) {
+      setSelectedChatId(chatId);
+    } else if (chatHistory.length > 0) {
+      setSelectedChatId(chatHistory[0].id);
     }
-  }, [chatId, navigate, toast]);
-  
+  }, [chatId, chatHistory]);
+
   useEffect(() => {
-    // Toggle sidebar based on screen size
-    if (isMobile !== undefined) {
-      setSidebarOpen(!isMobile); 
+    // Mock chat history data (replace with actual API call)
+    const mockChatHistory = [
+      { id: '1', title: 'Project Brainstorm', createdAt: new Date() },
+      { id: '2', title: 'Email Draft', createdAt: new Date() },
+      { id: '3', title: 'Code Review', createdAt: new Date() },
+    ];
+    setChatHistory(mockChatHistory);
+  }, []);
+
+  const createNewChat = () => {
+    setLoading(true);
+    // Mock API call to create a new chat (replace with actual API call)
+    setTimeout(() => {
+      const newChat = {
+        id: String(Date.now()),
+        title: 'New Chat',
+        createdAt: new Date(),
+      };
+      setChatHistory([newChat, ...chatHistory]);
+      setSelectedChatId(newChat.id);
+      navigate(`/chat/${newChat.id}`);
+      setLoading(false);
+    }, 1000);
+  };
+
+  const deleteChat = (chatIdToDelete) => {
+    setChatHistory(chatHistory.filter((chat) => chat.id !== chatIdToDelete));
+    if (selectedChatId === chatIdToDelete) {
+      setSelectedChatId(null);
+      navigate('/chat');
     }
-  }, [isMobile]);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/auth');
+    } catch (error) {
+      console.error("Sign out failed", error);
+    }
+  };
 
   return (
-    <div className="h-full flex flex-col">
-      <header className="flex items-center h-16 px-6 border-b bg-background/80 backdrop-blur-sm z-10">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="lg:hidden"
-        >
-          <MenuIcon className="h-5 w-5" />
-        </Button>
-        <div className="flex items-center justify-between w-full">
-          <h1 className="font-bold text-xl flex items-center">
-            <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">SmartZone AI</span>
-            <Sparkles className="h-4 w-4 ml-1 text-amber-500" />
-          </h1>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
-              onClick={() => navigate('/')}
-            >
-              <Home className="h-4 w-4" />
-              <span className="hidden sm:inline">Home</span>
-            </Button>
-            
-            {user && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
-                onClick={signOut}
+    <div className="h-full flex flex-col md:flex-row overflow-hidden">
+      {/* Mobile sidebar trigger */}
+      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+        <SheetTrigger asChild className="absolute top-4 left-4 md:hidden z-50">
+          <Button variant="outline" size="icon" className="rounded-full">
+            <Menu className="h-4 w-4" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="p-0 w-[300px]">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-between p-4 border-b">
+              <SZLogo size="sm" />
+              <Button 
+                onClick={createNewChat} 
+                variant="outline" 
+                className="flex gap-1 items-center"
+                disabled={loading}
               >
-                <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">Logout</span>
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle className="h-4 w-4" />
+                    New Chat
+                  </>
+                )}
               </Button>
-            )}
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              <ChatHistory 
+                chatHistory={chatHistory}
+                selectedChatId={selectedChatId}
+                onSelectChat={(id) => {
+                  setSelectedChatId(id);
+                  navigate(`/chat/${id}`);
+                  setSidebarOpen(false);
+                }}
+              />
+            </div>
+            <Separator />
+            <div className="p-4">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="w-full justify-between">
+                    Account <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={() => alert('Settings')}>
+                    <Settings className="h-4 w-4 mr-2" />
+                    Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:bg-destructive/5">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Sidebar */}
+      <div className="hidden md:flex flex-col w-[300px] min-w-[300px] h-full border-r bg-sidebar-background">
+        <div className="flex items-center justify-between p-4">
+          <SZLogo size="sm" />
+          <Button 
+            onClick={createNewChat} 
+            variant="outline" 
+            className="flex gap-1 items-center"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Creating...
+              </>
+            ) : (
+              <>
+                <PlusCircle className="h-4 w-4" />
+                New Chat
+              </>
+            )}
+          </Button>
         </div>
-      </header>
-      
-      <div className="flex flex-1 overflow-hidden">
-        {/* Mobile sidebar overlay */}
-        {sidebarOpen && isMobile && (
-          <div 
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
+        <div className="flex-1 overflow-y-auto">
+          <ChatHistory 
+            chatHistory={chatHistory}
+            selectedChatId={selectedChatId}
+            onSelectChat={(id) => {
+              setSelectedChatId(id);
+              navigate(`/chat/${id}`);
+            }}
           />
+        </div>
+        <Separator />
+        <div className="p-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="w-full justify-between">
+                Account <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem onClick={() => alert('Settings')}>
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:bg-destructive/5">
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col h-full">
+        {selectedChatId ? (
+          <ChatInterface chatId={selectedChatId} />
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-muted-foreground">
+              {chatHistory.length > 0 ? 'Select a chat to start messaging.' : 'Start a new chat to begin.'}
+            </p>
+          </div>
         )}
-        
-        {/* Sidebar */}
-        <aside 
-          className={cn(
-            "fixed inset-y-0 left-0 z-50 flex w-80 flex-col border-r bg-card/95 backdrop-blur-sm transition-transform duration-300 lg:z-0 lg:translate-x-0 pt-16",
-            sidebarOpen ? "translate-x-0" : "-translate-x-full"
-          )}
-        >
-          {isMobile && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-4 top-4"
-              onClick={() => setSidebarOpen(false)}
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          )}
-          <ChatHistory currentChatId={chatId} />
-        </aside>
-        
-        {/* Main content */}
-        <main 
-          className={cn(
-            "flex-1 overflow-hidden transition-all duration-300 ease-in-out",
-            sidebarOpen ? "lg:ml-80" : "ml-0"
-          )}
-        >
-          <ChatInterface />
-        </main>
       </div>
     </div>
   );
