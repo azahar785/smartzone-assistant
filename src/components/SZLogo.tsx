@@ -44,14 +44,41 @@ const SZLogo: React.FC<SZLogoProps> = ({
               <stop offset="100%" stopColor="#4f46e5" />
             </linearGradient>
           </defs>
-          <path 
-            d="M50 5C25.15 5 5 25.15 5 50c0 24.85 20.15 45 45 45 24.85 0 45-20.15 45-45C95 25.15 74.85 5 50 5z" 
+          {/* Circle background */}
+          <circle 
+            cx="50" 
+            cy="50" 
+            r="45" 
             fill={color === 'gradient' ? "url(#szGradient)" : "currentColor"}
           />
+          
+          {/* S letter */}
           <path 
-            d="M37 30c-2.76 0-5 2.24-5 5v5h15v-5c0-2.76-2.24-5-5-5H37z M63 30c-2.76 0-5 2.24-5 5v5h15v-5c0-2.76-2.24-5-5-5H63z M32 45v5c0 2.76 2.24 5 5 5h5c2.76 0 5-2.24 5-5v-5H32z M58 45v5c0 2.76 2.24 5 5 5h5c2.76 0 5-2.24 5-5v-5H58z M42 60v5c0 2.76 2.24 5 5 5h6c2.76 0 5-2.24 5-5v-5h-8H42z" 
+            d="M33 30c0-1.1 0.9-2 2-2h15c1.1 0 2 0.9 2 2v5c0 1.1-0.9 2-2 2H35c-1.1 0-2-0.9-2-2v-5z" 
             fill="white" 
           />
+          <path 
+            d="M33 45c0-1.1 0.9-2 2-2h15c1.1 0 2 0.9 2 2v5c0 1.1-0.9 2-2 2H35c-1.1 0-2-0.9-2-2v-5z" 
+            fill="white" 
+          />
+          <path 
+            d="M48 60c0-1.1 0.9-2 2-2h15c1.1 0 2 0.9 2 2v5c0 1.1-0.9 2-2 2H50c-1.1 0-2-0.9-2-2v-5z" 
+            fill="white" 
+          />
+          
+          {/* Z letter */}
+          <path 
+            d="M48 30c0-1.1 0.9-2 2-2h15c1.1 0 2 0.9 2 2v5c0 1.1-0.9 2-2 2H50c-1.1 0-2-0.9-2-2v-5z" 
+            fill="white" 
+          />
+          <path 
+            d="M33 60c0-1.1 0.9-2 2-2h15c1.1 0 2 0.9 2 2v5c0 1.1-0.9 2-2 2H35c-1.1 0-2-0.9-2-2v-5z" 
+            fill="white" 
+          />
+          
+          {/* Plus sign connector */}
+          <rect x="48" y="44" width="4" height="12" fill="white" />
+          <rect x="44" y="48" width="12" height="4" fill="white" />
         </svg>
       </div>
       <span 
@@ -60,20 +87,16 @@ const SZLogo: React.FC<SZLogoProps> = ({
           color === 'gradient' && "bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
         )}
       >
-        SmartZone AI
+        Creazone IT
       </span>
       {showSparkle && (
         <svg 
           className="h-4 w-4 ml-1 text-amber-500" 
           xmlns="http://www.w3.org/2000/svg" 
           viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
+          fill="currentColor"
         >
-          <path d="M12 3v5m0 0 3-3m-3 3-3-3M9 10h6M8 14h8m-9 3a4 4 0 0 0 8 0m3-3-2 2 2 2"/>
+          <path d="M12 3l1.8 4.7h4.9l-3.9 3.7 1.5 5.4-4.3-2.6-4.3 2.6 1.5-5.4-3.9-3.7h4.9z" />
         </svg>
       )}
     </div>

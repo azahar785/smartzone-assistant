@@ -1,14 +1,21 @@
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { ArrowRight, Bot, BrainCircuit, MessageSquare, Zap, Rocket } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { Link } from 'react-router-dom';
 import SZLogo from '@/components/SZLogo';
+import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/context/AuthContext';
+import { ArrowRight, CheckCircle, Sparkle } from 'lucide-react';
 
 const Landing = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+
+  useEffect(() => {
+    // Scroll to top on component mount
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleGetStarted = () => {
     if (user) {
@@ -19,272 +26,300 @@ const Landing = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-background landing-page">
       {/* Header */}
-      <header className="sticky top-0 w-full border-b bg-background/80 backdrop-blur-sm z-50">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <SZLogo />
-          </div>
-          <div className="flex items-center gap-4">
+      <header className="border-b border-border">
+        <div className="container mx-auto py-4 px-4 flex justify-between items-center">
+          <Link to="/" className="flex items-center space-x-2">
+            <SZLogo size="md" color="primary" />
+          </Link>
+          <div className="flex items-center space-x-4">
+            <Link to="/" className="text-primary font-medium">
+              Home
+            </Link>
+            <Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">
+              About
+            </Link>
             {user ? (
               <>
-                <Button 
-                  variant="ghost" 
-                  className="text-sm font-medium"
-                  onClick={() => navigate('/chat')}
-                >
-                  Go to Chat
+                <Button variant="ghost" onClick={() => navigate('/chat')}>
+                  Dashboard
                 </Button>
-                <Button 
-                  variant="outline"
-                  className="text-sm font-medium"
-                  onClick={signOut}
-                >
-                  Logout
+                <Button variant="outline" onClick={() => navigate('/chat')}>
+                  Open App
                 </Button>
               </>
             ) : (
-              <Button 
-                variant="ghost" 
-                className="text-sm font-medium"
-                onClick={() => navigate('/auth')}
-              >
-                Login
-              </Button>
+              <>
+                <Button variant="ghost" onClick={() => navigate('/auth')}>
+                  Login
+                </Button>
+                <Button variant="outline" onClick={() => navigate('/auth?signup=true')}>
+                  Sign Up
+                </Button>
+              </>
             )}
-            <Button 
-              onClick={handleGetStarted}
-              className="button-gradient font-medium"
-            >
-              {user ? 'Go to Chat' : 'Get Started'}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="container py-20 md:py-32 flex flex-col md:flex-row items-center">
-        <div className="flex-1 space-y-6">
-          <div className="inline-block rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 mb-4 animate-fade-in">
-            <span className="flex items-center">
-              <Sparkles className="mr-1 h-3.5 w-3.5" />
-              Powered by Creazone IT
-            </span>
+      {/* Hero section */}
+      <section className="container mx-auto py-16 md:py-24 px-4">
+        <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+            <Sparkle className="h-4 w-4 mr-2" />
+            AI-Powered Assistant For Everyone
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+            Experience the Future of AI Conversations with{' '}
             <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              Intelligent AI
-            </span>{" "}
-            <br />
-            for Everyone
+              Creazone IT
+            </span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-[600px] leading-relaxed">
-            Unlock the power of AI with SmartZone's intuitive interface. 
-            Get instant answers, create content, and solve problems with our 
-            advanced AI assistant.
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl">
+            Our advanced AI assistant helps you get things done faster. Ask questions, generate content, and solve problems - all in one place.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <Button 
-              onClick={handleGetStarted}
-              size="lg" 
-              className="button-gradient font-medium"
-            >
-              Start for Free
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button 
-              variant="outline" 
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button
               size="lg"
-              onClick={() => window.open('#features', '_self')}
-            >
-              Explore Features
-            </Button>
-          </div>
-        </div>
-        <div className="flex-1 w-full mt-10 md:mt-0 relative">
-          <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-purple-400/30 rounded-full blur-[120px]" />
-          <div className="rounded-lg border bg-card p-3 shadow-sm overflow-hidden">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between border-b pb-3">
-                <div className="flex items-center gap-2">
-                  <Bot className="h-5 w-5 text-primary" />
-                  <span className="text-sm font-medium">SmartZone AI</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="h-2 w-2 rounded-full bg-green-500 mr-1.5"></div>
-                  <span className="text-xs text-muted-foreground">Online</span>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white">
-                    <Bot className="h-4 w-4" />
-                  </div>
-                  <div className="rounded-lg bg-muted p-3 text-sm max-w-[80%] animate-fade-in">
-                    Hello! I'm SmartZone AI, your intelligent assistant. How can I help you today?
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 justify-end">
-                  <div className="rounded-lg chat-bubble-user text-sm max-w-[80%] animate-fade-in">
-                    Can you help me write a professional email to schedule a meeting with clients?
-                  </div>
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center text-white">
-                    <span className="text-xs font-medium">You</span>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white">
-                    <Bot className="h-4 w-4" />
-                  </div>
-                  <div className="rounded-lg bg-muted p-3 text-sm max-w-[80%] animate-fade-in">
-                    Absolutely! Here's a professional email template for scheduling a client meeting:
-                    <br /><br />
-                    <strong>Subject:</strong> Meeting Request: [Project Name] Discussion
-                    <br /><br />
-                    Dear [Client Name],
-                    <br /><br />
-                    I hope this email finds you well. I'm writing to schedule a meeting to discuss [specific topic or project].
-                    <br /><br />
-                    Would you be available on [date] at [time]? If not, please suggest a time that works better for you.
-                    <br /><br />
-                    Looking forward to our conversation.
-                    <br /><br />
-                    Best regards,
-                    <br />
-                    [Your Name]
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-20 bg-muted/50">
-        <div className="container space-y-12">
-          <div className="text-center space-y-4 max-w-[800px] mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold">
-              Cutting-Edge AI Features
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Discover what makes SmartZone AI the most versatile AI assistant available today
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="bg-card rounded-xl p-6 shadow-sm border hover:shadow-md transition-all">
-              <div className="h-12 w-12 rounded-lg bg-purple-100 flex items-center justify-center mb-5">
-                <MessageSquare className="h-6 w-6 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Natural Conversations</h3>
-              <p className="text-muted-foreground">
-                Enjoy fluid, human-like conversations with contextual understanding and memory of previous interactions.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="bg-card rounded-xl p-6 shadow-sm border hover:shadow-md transition-all">
-              <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center mb-5">
-                <BrainCircuit className="h-6 w-6 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Advanced Intelligence</h3>
-              <p className="text-muted-foreground">
-                Powered by Creazone IT's state-of-the-art models for accurate responses across diverse topics.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="bg-card rounded-xl p-6 shadow-sm border hover:shadow-md transition-all">
-              <div className="h-12 w-12 rounded-lg bg-green-100 flex items-center justify-center mb-5">
-                <Zap className="h-6 w-6 text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Instant Responses</h3>
-              <p className="text-muted-foreground">
-                Get immediate answers and solutions with lightning-fast response times, regardless of complexity.
-              </p>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="bg-card rounded-xl p-6 shadow-sm border hover:shadow-md transition-all">
-              <div className="h-12 w-12 rounded-lg bg-amber-100 flex items-center justify-center mb-5">
-                <Rocket className="h-6 w-6 text-amber-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Creative Assistant</h3>
-              <p className="text-muted-foreground">
-                Generate content, brainstorm ideas, and overcome creative blocks with AI-powered inspiration.
-              </p>
-            </div>
-
-            {/* Feature 5 */}
-            <div className="bg-card rounded-xl p-6 shadow-sm border hover:shadow-md transition-all">
-              <div className="h-12 w-12 rounded-lg bg-red-100 flex items-center justify-center mb-5">
-                <Bot className="h-6 w-6 text-red-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Personalized Experience</h3>
-              <p className="text-muted-foreground">
-                Adapts to your preferences and needs, creating a tailored AI experience just for you.
-              </p>
-            </div>
-
-            {/* Feature 6 */}
-            <div className="bg-card rounded-xl p-6 shadow-sm border hover:shadow-md transition-all">
-              <div className="h-12 w-12 rounded-lg bg-indigo-100 flex items-center justify-center mb-5">
-                <Sparkles className="h-6 w-6 text-indigo-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Endless Possibilities</h3>
-              <p className="text-muted-foreground">
-                From coding assistance to creative writing, harness the full potential of AI in one easy-to-use platform.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 container">
-        <div className="rounded-2xl overflow-hidden border bg-card relative">
-          <div className="absolute -z-10 top-1/2 right-1/4 -translate-y-1/2 w-[300px] h-[300px] bg-purple-400/20 rounded-full blur-[120px]" />
-          <div className="absolute -z-10 bottom-0 left-1/4 w-[200px] h-[200px] bg-blue-400/20 rounded-full blur-[90px]" />
-          <div className="p-8 md:p-12 lg:p-16 max-w-[800px] mx-auto text-center space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold">
-              Ready to Experience the Future of AI?
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Join thousands of users who are already leveraging the power of SmartZone AI in their daily lives and work.
-            </p>
-            <Button 
+              className="button-gradient"
               onClick={handleGetStarted}
-              size="lg" 
-              className="button-gradient font-medium"
             >
-              {user ? 'Go to Your Dashboard' : 'Get Started for Free'}
-              <ArrowRight className="ml-2 h-4 w-4" />
+              Get Started
+              <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
-            <div className="pt-4 text-sm text-muted-foreground">
-              {!user && 'No credit card required • Free plan available'}
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => navigate('/about')}
+            >
+              Learn More
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Feature section */}
+      <section className="container mx-auto py-16 md:py-24 px-4">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center">
+            Powerful Features
+          </h2>
+          <p className="text-xl text-muted-foreground mb-12 text-center">
+            Discover what makes Creazone IT the ultimate AI assistant
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="feature-card">
+              <div className="feature-icon bg-purple-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-6 h-6 text-primary"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4M12 8h.01" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Instant Answers</h3>
+              <p className="text-muted-foreground">
+                Get immediate responses to your questions, no matter how complex they are.
+              </p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon bg-blue-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-6 h-6 text-blue-600"
+                >
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Knowledge Base</h3>
+              <p className="text-muted-foreground">
+                Access a vast database of information, always up-to-date and accurate.
+              </p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon bg-green-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-6 h-6 text-green-600"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Secure & Private</h3>
+              <p className="text-muted-foreground">
+                Your conversations are encrypted and your data remains private and secure.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials section */}
+      <section className="bg-accent/30 py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+            What Our Users Say
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="bg-card p-6 rounded-lg shadow-sm border">
+              <div className="flex items-center mb-4">
+                <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                  JS
+                </div>
+                <div className="ml-3">
+                  <h4 className="font-semibold">John Smith</h4>
+                  <p className="text-sm text-muted-foreground">Marketing Manager</p>
+                </div>
+              </div>
+              <p className="text-muted-foreground">
+                "Creazone IT has completely transformed how I work. It helps me draft emails, create content, and research topics in a fraction of the time."
+              </p>
+            </div>
+            <div className="bg-card p-6 rounded-lg shadow-sm border">
+              <div className="flex items-center mb-4">
+                <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                  AR
+                </div>
+                <div className="ml-3">
+                  <h4 className="font-semibold">Amanda Rodriguez</h4>
+                  <p className="text-sm text-muted-foreground">Software Developer</p>
+                </div>
+              </div>
+              <p className="text-muted-foreground">
+                "As a developer, I use Creazone IT daily to help me debug code, explain concepts, and brainstorm solutions. It's like having a senior developer on call 24/7."
+              </p>
+            </div>
+            <div className="bg-card p-6 rounded-lg shadow-sm border">
+              <div className="flex items-center mb-4">
+                <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                  TK
+                </div>
+                <div className="ml-3">
+                  <h4 className="font-semibold">Tom Kumar</h4>
+                  <p className="text-sm text-muted-foreground">Student</p>
+                </div>
+              </div>
+              <p className="text-muted-foreground">
+                "Creazone IT helps me understand complex topics and prepare for exams. It explains things in a way that's easy to understand, which has improved my grades significantly."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA section */}
+      <section className="container mx-auto py-16 md:py-24 px-4">
+        <div className="bg-card rounded-xl p-8 md:p-12 shadow-sm border max-w-5xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div className="mb-6 md:mb-0 md:mr-8">
+              <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
+              <p className="text-muted-foreground mb-0 md:mb-0">
+                Join thousands of users who are already using Creazone IT to boost their productivity.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" className="button-gradient" onClick={handleGetStarted}>
+                <Sparkle className="h-4 w-4 mr-2" />
+                Try For Free
+              </Button>
+              <Button size="lg" variant="outline" onClick={() => navigate('/about')}>
+                Learn More
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="mt-auto py-12 border-t">
-        <div className="container">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center gap-2 mb-4 md:mb-0">
-              <SZLogo size="sm" />
+      <footer className="bg-secondary/30 border-t border-border">
+        <div className="container mx-auto py-12 px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <SZLogo size="md" color="primary" />
+              <p className="text-sm text-muted-foreground mt-4">
+                Helping you harness the power of AI for everyday tasks and complex challenges.
+              </p>
             </div>
-            <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 text-sm text-muted-foreground">
-              <a href="#" className="hover:text-foreground transition-colors">Terms of Service</a>
-              <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-foreground transition-colors">Contact</a>
-              <div className="flex items-center">
-                <span>© 2023 Creazone IT. All rights reserved.</span>
-              </div>
+            <div>
+              <h3 className="font-semibold mb-4">Pages</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link to="/" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/auth" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/auth?signup=true" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Sign Up
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Follow Us</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a href="https://www.youtube.com/creazoneit" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    YouTube
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.facebook.com/creazoneit" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Facebook
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Contact</h3>
+              <p className="text-sm text-muted-foreground">
+                Have questions or feedback? Reach out to us at <a href="mailto:info@creazoneit.com" className="text-primary hover:underline">info@creazoneit.com</a>
+              </p>
+            </div>
+          </div>
+          <Separator className="my-8" />
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} Creazone IT. All rights reserved.
+            </p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+              <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Terms of Service
+              </a>
             </div>
           </div>
         </div>
