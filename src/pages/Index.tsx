@@ -5,11 +5,12 @@ import { useEffect } from 'react';
 import { createNewChat } from '@/utils/chatStorage';
 import ChatInterface from '@/components/ChatInterface';
 import ChatHistory from '@/components/ChatHistory';
-import { MenuIcon, X, Sparkles, Home } from 'lucide-react';
+import { MenuIcon, X, Sparkles, Home, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/context/AuthContext';
 
 const Index = () => {
   const { chatId } = useParams<{ chatId?: string }>();
@@ -17,6 +18,7 @@ const Index = () => {
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = React.useState(!isMobile);
   const { toast } = useToast();
+  const { signOut, user } = useAuth();
   
   useEffect(() => {
     // If no chatId, redirect to a new chat
@@ -53,15 +55,29 @@ const Index = () => {
             <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">SmartZone AI</span>
             <Sparkles className="h-4 w-4 ml-1 text-amber-500" />
           </h1>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
-            onClick={() => navigate('/')}
-          >
-            <Home className="h-4 w-4" />
-            <span className="hidden sm:inline">Home</span>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
+              onClick={() => navigate('/')}
+            >
+              <Home className="h-4 w-4" />
+              <span className="hidden sm:inline">Home</span>
+            </Button>
+            
+            {user && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                onClick={signOut}
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Logout</span>
+              </Button>
+            )}
+          </div>
         </div>
       </header>
       

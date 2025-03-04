@@ -4,12 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ArrowRight, Bot, BrainCircuit, MessageSquare, Sparkles, Zap, Rocket } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   const handleGetStarted = () => {
-    navigate('/chat');
+    if (user) {
+      navigate('/chat');
+    } else {
+      navigate('/auth');
+    }
   };
 
   return (
@@ -24,18 +30,37 @@ const Landing = () => {
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <Button 
-              variant="ghost" 
-              className="text-sm font-medium"
-              onClick={handleGetStarted}
-            >
-              Login
-            </Button>
+            {user ? (
+              <>
+                <Button 
+                  variant="ghost" 
+                  className="text-sm font-medium"
+                  onClick={() => navigate('/chat')}
+                >
+                  Go to Chat
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="text-sm font-medium"
+                  onClick={signOut}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Button 
+                variant="ghost" 
+                className="text-sm font-medium"
+                onClick={() => navigate('/auth')}
+              >
+                Login
+              </Button>
+            )}
             <Button 
               onClick={handleGetStarted}
               className="button-gradient font-medium"
             >
-              Get Started
+              {user ? 'Go to Chat' : 'Get Started'}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
@@ -239,11 +264,11 @@ const Landing = () => {
               size="lg" 
               className="button-gradient font-medium"
             >
-              Get Started for Free
+              {user ? 'Go to Your Dashboard' : 'Get Started for Free'}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <div className="pt-4 text-sm text-muted-foreground">
-              No credit card required • Free plan available
+              {!user && 'No credit card required • Free plan available'}
             </div>
           </div>
         </div>
