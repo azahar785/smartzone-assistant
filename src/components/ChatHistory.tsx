@@ -9,9 +9,10 @@ import { toast } from '@/components/ui/use-toast';
 
 interface ChatHistoryProps {
   currentChatId?: string;
+  onSelectChat?: (id: string) => void;
 }
 
-const ChatHistory: React.FC<ChatHistoryProps> = ({ currentChatId }) => {
+const ChatHistory: React.FC<ChatHistoryProps> = ({ currentChatId, onSelectChat }) => {
   const [chats, setChats] = useState<ReturnType<typeof getAllChats>>([]);
   const navigate = useNavigate();
   
@@ -44,7 +45,12 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ currentChatId }) => {
     const updateEvent = new Event('smartzone-storage-update');
     window.dispatchEvent(updateEvent);
     
-    navigate(`/chat/${newChatId}`);
+    if (onSelectChat) {
+      onSelectChat(newChatId);
+    } else {
+      navigate(`/chat/${newChatId}`);
+    }
+    
     toast({
       description: "New chat created",
     });
@@ -59,12 +65,23 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ currentChatId }) => {
     
     if (currentChatId === chatId) {
       const newChatId = createNewChat();
-      navigate(`/chat/${newChatId}`);
+      
+      if (onSelectChat) {
+        onSelectChat(newChatId);
+      } else {
+        navigate(`/chat/${newChatId}`);
+      }
     }
     
     toast({
       description: "Chat deleted",
     });
+  };
+
+  const handleSelectChat = (chatId: string) => {
+    if (onSelectChat) {
+      onSelectChat(chatId);
+    }
   };
   
   return (
@@ -90,7 +107,8 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ currentChatId }) => {
           <div className="space-y-1">
             {chats.map(chat => (
               <Link 
-                to={`/chat/${chat.id}`} 
+                to={onSelectChat ? "#" : `/chat/${chat.id}`}
+                onClick={() => onSelectChat && handleSelectChat(chat.id)} 
                 key={chat.id} 
                 className={cn(
                   'flex items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-accent/80 group transition-all',
@@ -119,8 +137,8 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ currentChatId }) => {
         <div className="text-xs text-center">
           <p className="font-medium">SmartZone AI Assistant</p>
           <div className="mt-1 flex items-center justify-center text-muted-foreground">
-            <span>Powered by</span>
-            <span className="ml-1 font-semibold bg-gradient-to-r from-purple-600 to-indigo-500 bg-clip-text text-transparent">Creazone IT</span>
+            <span>Created by</span>
+            <span className="ml-1 font-semibold bg-gradient-to-r from-purple-600 to-indigo-500 bg-clip-text text-transparent">Md Abirul Islam Abir</span>
             <Sparkles className="h-3 w-3 ml-1 text-amber-500" />
           </div>
         </div>
