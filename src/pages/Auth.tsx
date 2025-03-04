@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, ArrowLeft } from 'lucide-react';
 import { useEffect } from 'react';
+import { toast } from '@/components/ui/use-toast';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -32,9 +33,24 @@ const Auth = () => {
       if (isLogin) {
         await signIn(email, password);
       } else {
+        if (!fullName.trim()) {
+          toast({
+            variant: "destructive",
+            title: "Full name is required",
+            description: "Please enter your full name to create an account.",
+          });
+          setLoading(false);
+          return;
+        }
+        
         await signUp(email, password, fullName);
         setIsLogin(true); // Switch to login form after signup
+        toast({
+          description: "Account created successfully. Please log in.",
+        });
       }
+    } catch (error) {
+      console.error("Auth error:", error);
     } finally {
       setLoading(false);
     }
@@ -65,7 +81,9 @@ const Auth = () => {
           <Button 
             variant="ghost" 
             onClick={() => navigate('/')}
+            className="flex items-center gap-1"
           >
+            <ArrowLeft className="h-4 w-4" />
             Back to Home
           </Button>
         </div>
@@ -127,6 +145,9 @@ const Auth = () => {
                   required
                   minLength={6}
                 />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {!isLogin && 'Password must be at least 6 characters long'}
+                </p>
               </div>
               
               <Button 
